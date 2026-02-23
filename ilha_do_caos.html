@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🏝️ OPERAÇÃO: ILHA DO CAOS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800;900&family=Permanent+Marker&family=Patrick+Hand&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;touch-action:manipulation}
+body{font-family:'Nunito',sans-serif;color:#fff;background:#0a1628;user-select:none}
+
+:root{
+  --sand:#f5e6a3;--ocean:#1a8fc0;--palm:#2d8a1e;--sun:#ffcc00;
+  --hot:#ff4422;--cool:#44aaff;--pink:#ff44aa;--purple:#9944ff;
+  --poll:#f5c518;--carl:#ff5533;--eros:#9944ff;--step:#2288ff;
+  --mary:#33cc66;--mel:#ff44aa;--joy:#ff8800;--ell:#00cccc;--eli:#cc4488;
+}
+
+/* ══ SCREENS ══ */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.screen.active{display:flex}
+
+/* ══════════════════════════
+   INTRO / SPLASH
+══════════════════════════ */
+#s-intro{
+  background:linear-gradient(180deg,#0a6aad 0%,#1a9acc 30%,#2eb8e0 55%,#f5e6a3 55%,#e8d280 65%,#c8a830 100%);
+}
+.intro-sky{position:absolute;top:0;left:0;right:0;height:55%;overflow:hidden}
+.cloud{position:absolute;font-size:clamp(30px,6vw,50px);animation:cloudDrift linear infinite;opacity:.85}
+@keyframes cloudDrift{from{transform:translateX(-120px)}to{transform:translateX(calc(100vw + 120px))}}
+.intro-sun{
+  position:absolute;top:clamp(20px,5vw,50px);right:clamp(30px,8vw,100px);
+  font-size:clamp(50px,10vw,90px);animation:sunSpin 8s linear infinite;
+}
+@keyframes sunSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.intro-content{position:relative;z-index:5;text-align:center;padding:0 20px}
+.intro-kicker{
+  font-family:'Patrick Hand',cursive;font-size:clamp(13px,3vw,18px);
+  color:rgba(255,255,255,.8);letter-spacing:3px;margin-bottom:8px;
+  text-shadow:0 2px 6px rgba(0,0,0,.4);
+}
+.intro-title{
+  font-family:'Lilita One',cursive;
+  font-size:clamp(38px,9vw,88px);line-height:1;
+  color:#fff;text-shadow:4px 4px 0 rgba(0,100,180,.5),0 0 40px rgba(255,220,0,.3);
+  margin-bottom:4px;letter-spacing:2px;
+}
+.intro-title .accent{color:#ffcc00;text-shadow:4px 4px 0 rgba(180,100,0,.5)}
+.intro-sub{
+  font-family:'Permanent Marker',cursive;
+  font-size:clamp(14px,3.5vw,22px);color:#ffe066;
+  text-shadow:2px 2px 0 rgba(0,0,0,.4);margin-bottom:20px;
+}
+.intro-chars{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.intro-char{
+  background:rgba(255,255,255,.15);backdrop-filter:blur(4px);
+  border:2px solid rgba(255,255,255,.3);border-radius:16px;
+  padding:8px 14px;font-size:clamp(11px,2.5vw,14px);font-weight:800;
+  display:flex;align-items:center;gap:6px;
+  animation:charBob ease-in-out infinite;
+}
+@keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.intro-synopsis{
+  max-width:500px;margin:0 auto 24px;
+  background:rgba(0,0,0,.35);backdrop-filter:blur(8px);border-radius:16px;
+  padding:16px 20px;border:1px solid rgba(255,255,255,.15);
+  font-size:clamp(12px,2.5vw,15px);line-height:1.8;color:rgba(255,255,255,.9);
+}
+.intro-synopsis strong{color:#ffcc00}
+.btn-start{
+  font-family:'Lilita One',cursive;font-size:clamp(18px,4vw,26px);
+  letter-spacing:3px;padding:16px 56px;border:none;border-radius:50px;cursor:pointer;
+  background:linear-gradient(135deg,#ff4422,#ff8800);color:#fff;
+  box-shadow:0 6px 0 rgba(180,40,0,.5),0 0 40px rgba(255,100,0,.4);
+  transition:all .15s;text-shadow:2px 2px 0 rgba(0,0,0,.3);
+}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 9px 0 rgba(180,40,0,.5),0 0 60px rgba(255,100,0,.5)}
+.btn-start:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(180,40,0,.5)}
+.palm-decor{position:absolute;bottom:0;font-size:clamp(60px,12vw,110px);line-height:1;z-index:4}
+.palm-l{left:-10px;transform:scaleX(-1)rotate(-8deg)}
+.palm-r{right:-10px;transform:rotate(8deg)}
+
+/* ══════════════════════════
+   MAP SCREEN
+══════════════════════════ */
+#s-map{
+  background:linear-gradient(160deg,#0a3a6a,#0a5a9a,#0a8acc);
+}
+#map-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 60%,#2d9e3a 0%,#1e7a28 40%,transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 65%,#e8d280 0%,#c8a830 30%,transparent 60%),
+    linear-gradient(180deg,#0a6aad 0%,#1a9acc 40%,#2eb8e0 100%);
+  overflow:hidden;
+}
+.map-wave{
+  position:absolute;bottom:0;left:0;right:0;height:80px;
+  background:linear-gradient(transparent,rgba(30,120,200,.4));
+  animation:waveAnim 3s ease-in-out infinite;
+}
+@keyframes waveAnim{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.15)}}
+
+.map-ui{position:relative;z-index:10;width:100%;height:100%;display:flex;flex-direction:column}
+.map-topbar{
+  padding:10px 16px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);
+  border-bottom:2px solid rgba(255,220,0,.3);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;
+}
+.map-title-bar{
+  font-family:'Lilita One',cursive;font-size:clamp(16px,4vw,24px);
+  color:#ffcc00;text-shadow:2px 2px 0 rgba(0,0,0,.4);letter-spacing:2px;
+}
+.chaos-meter-wrap{display:flex;align-items:center;gap:8px;flex:1;max-width:220px}
+.chaos-label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.5);white-space:nowrap}
+.chaos-bar{flex:1;height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.chaos-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#44ff88,#ffcc00,#ff4422);transition:width .5s ease}
+.chaos-val{font-family:'Lilita One',cursive;font-size:14px;color:#ffcc00;min-width:36px;text-align:right}
+.chapter-badge{
+  font-family:'Lilita One',cursive;font-size:12px;letter-spacing:2px;
+  color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);
+  padding:4px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);
+  white-space:nowrap;
+}
+
+.map-area{flex:1;position:relative;display:flex;align-items:center;justify-content:center}
+
+/* Island locations */
+.loc-btn{
+  position:absolute;cursor:pointer;text-align:center;
+  transition:transform .2s;z-index:20;
+  -webkit-tap-highlight-color:transparent;
+}
+.loc-btn:hover .loc-icon,.loc-btn:active .loc-icon{transform:scale(1.2) translateY(-4px)}
+.loc-icon{
+  font-size:clamp(32px,6vw,54px);display:block;transition:transform .2s;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
+}
+.loc-name{
+  font-family:'Lilita One',cursive;font-size:clamp(9px,2vw,13px);
+  color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.8),0 0 10px rgba(0,0,0,.5);
+  margin-top:4px;letter-spacing:1px;white-space:nowrap;
+}
+.loc-status{
+  font-size:clamp(8px,1.8vw,11px);margin-top:2px;
+  font-weight:800;letter-spacing:1px;
+}
+.loc-btn.done .loc-icon{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) grayscale(.3)}
+.loc-btn.done .loc-status{color:#44ff88}
+.loc-btn.locked{opacity:.45;cursor:not-allowed}
+.loc-btn.locked .loc-icon{filter:grayscale(.8)}
+.loc-btn.available .loc-icon{animation:locPulse 2s ease-in-out infinite}
+@keyframes locPulse{0%,100%{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 0 rgba(255,220,0,0))}50%{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 15px rgba(255,220,0,.7))}}
+
+.stars-display{font-size:clamp(10px,2.5vw,14px);letter-spacing:2px}
+
+/* story panel */
+.story-panel{
+  position:absolute;bottom:0;left:0;right:0;z-index:30;
+  background:rgba(10,22,40,.92);backdrop-filter:blur(12px);
+  border-top:2px solid rgba(255,220,0,.3);
+  padding:14px 20px;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  max-height:55%;overflow-y:auto;
+}
+.story-panel.open{transform:translateY(0)}
+.story-speaker{
+  font-family:'Lilita One',cursive;font-size:clamp(14px,3vw,18px);
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+.story-text{
+  font-family:'Patrick Hand',cursive;font-size:clamp(13px,2.8vw,17px);
+  line-height:1.7;color:rgba(255,255,255,.88);margin-bottom:14px;
+}
+.story-text em{color:#ffcc00;font-style:normal;font-weight:700}
+.story-choices{display:flex;flex-direction:column;gap:8px}
+.story-choice{
+  padding:12px 16px;border-radius:10px;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  font-family:'Patrick Hand',cursive;font-size:clamp(12px,2.5vw,15px);
+  color:rgba(255,255,255,.85);text-align:left;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.story-choice:hover{background:rgba(255,220,0,.1);border-color:rgba(255,220,0,.4);color:#fff;transform:translateX(4px)}
+.story-btn-next{
+  font-family:'Lilita One',cursive;font-size:16px;letter-spacing:2px;
+  padding:12px 32px;border:none;border-radius:30px;cursor:pointer;
+  background:linear-gradient(135deg,#ff8800,#ffcc00);color:#000;
+  box-shadow:0 4px 0 rgba(180,80,0,.4);transition:all .15s;margin-top:8px;
+}
+.story-btn-next:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(180,80,0,.4)}
+
+/* ══════════════════════════
+   MINI-GAME WRAPPER
+══════════════════════════ */
+#s-game{background:#0a1628}
+.game-container{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}
+
+.game-topbar{
+  padding:8px 14px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);
+  border-bottom:2px solid rgba(255,255,255,.08);flex-shrink:0;
+  display:flex;align-items:center;gap:12px;
+}
+.gt-char{font-size:28px}
+.gt-info{flex:1}
+.gt-title{font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);letter-spacing:1px}
+.gt-sub{font-size:clamp(10px,2vw,12px);color:rgba(255,255,255,.5);margin-top:1px}
+.gt-timer-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:80px}
+.gt-timer{font-family:'Lilita One',cursive;font-size:clamp(20px,4vw,28px);color:#ffcc00}
+.gt-tbar{width:80px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.gt-tfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#44ff88,#ffcc00,#ff4422);transition:width .1s}
+
+.game-body{flex:1;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+
+/* ══════════════════════════
+   RESULT CARD
+══════════════════════════ */
+#result-card{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(16px);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;gap:10px;
+}
+#result-card.show{display:flex;animation:rcIn .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes rcIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.rc-emoji{font-size:clamp(60px,14vw,100px);animation:rcBounce .7s ease}
+@keyframes rcBounce{0%{transform:scale(0)rotate(-15deg)}70%{transform:scale(1.15)rotate(3deg)}100%{transform:scale(1)rotate(0)}}
+.rc-title{font-family:'Lilita One',cursive;font-size:clamp(28px,7vw,52px);letter-spacing:3px;text-align:center}
+.rc-stars{font-size:clamp(28px,6vw,42px);letter-spacing:6px;margin:4px 0}
+.rc-story{
+  max-width:400px;text-align:center;
+  font-family:'Patrick Hand',cursive;font-size:clamp(13px,3vw,17px);
+  color:rgba(255,255,255,.8);line-height:1.7;margin:0 16px;
+}
+.rc-story strong{color:#ffcc00}
+.rc-quote{
+  font-family:'Permanent Marker',cursive;
+  font-size:clamp(13px,3vw,17px);color:#aaddff;text-align:center;
+  max-width:380px;margin:0 16px;font-style:italic;
+}
+.rc-btn{
+  font-family:'Lilita One',cursive;font-size:clamp(16px,3.5vw,22px);letter-spacing:3px;
+  padding:14px 44px;border:none;border-radius:50px;cursor:pointer;
+  background:linear-gradient(135deg,#44ff88,#00cccc);color:#003322;
+  box-shadow:0 5px 0 rgba(0,100,80,.5);transition:all .15s;margin-top:6px;
+}
+.rc-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,100,80,.5)}
+
+/* ══════════════════════════
+   ENDINGS
+══════════════════════════ */
+#s-end-good,#s-end-bad{
+  overflow-y:auto;padding:40px 20px;
+}
+#s-end-good{background:linear-gradient(160deg,#0a3a10,#0a5a20,#0a9a40)}
+#s-end-bad{background:linear-gradient(160deg,#3a0a0a,#5a0a0a,#3a1010)}
+.end-wrap{max-width:560px;width:100%;text-align:center}
+.end-emoji-big{font-size:clamp(60px,15vw,110px);display:block;margin-bottom:16px;animation:endBounce 1s ease infinite}
+@keyframes endBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.end-title{
+  font-family:'Lilita One',cursive;
+  font-size:clamp(32px,8vw,70px);letter-spacing:3px;margin-bottom:12px;line-height:1.1;
+}
+.end-story{
+  font-family:'Patrick Hand',cursive;font-size:clamp(14px,2.8vw,18px);
+  line-height:1.9;color:rgba(255,255,255,.85);margin:0 0 28px;
+}
+.end-story p{margin-bottom:12px}
+.end-story strong{color:#ffcc00}
+.end-chars-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px}
+.end-char-card{
+  padding:12px 14px;border-radius:14px;min-width:88px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);text-align:center;
+}
+.end-char-emoji{font-size:28px;display:block;margin-bottom:4px}
+.end-char-name{font-family:'Lilita One',cursive;font-size:11px;letter-spacing:1px}
+.end-char-stars{font-size:14px}
+.end-total{
+  font-family:'Lilita One',cursive;font-size:clamp(18px,4vw,26px);
+  color:#ffcc00;margin-bottom:24px;
+}
+.end-btn-wrap{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.end-btn{
+  font-family:'Lilita One',cursive;font-size:clamp(15px,3.5vw,20px);letter-spacing:3px;
+  padding:14px 36px;border:none;border-radius:50px;cursor:pointer;transition:all .15s;
+}
+.end-btn.primary{background:linear-gradient(135deg,#ff8800,#ffcc00);color:#000;box-shadow:0 5px 0 rgba(180,80,0,.4)}
+.end-btn.secondary{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
+.end-btn:active{transform:translateY(2px)}
+
+/* ══════════════════════════
+   MINI-GAME STYLES
+══════════════════════════ */
+
+/* === GAME 1: BAGGAGE RUSH (tap sorting) === */
+.bag-conveyor{
+  width:100%;max-width:460px;height:110px;
+  background:linear-gradient(180deg,#1a1a2e,#16213e);
+  border-radius:14px;border:2px solid rgba(255,255,255,.1);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.bag-item{
+  position:absolute;top:50%;transform:translateY(-50%);
+  font-size:clamp(26px,5vw,38px);cursor:pointer;
+  transition:transform .1s;animation:bagMove linear forwards;
+  -webkit-tap-highlight-color:transparent;
+}
+@keyframes bagMove{from{left:-60px}to{left:calc(100% + 60px)}}
+.bag-item:active{transform:translateY(-50%) scale(.85)}
+.bag-bins{width:100%;max-width:460px;display:flex;gap:10px;margin-bottom:10px}
+.bag-bin{
+  flex:1;padding:12px 8px;border-radius:14px;border:2px dashed rgba(255,255,255,.2);
+  background:rgba(255,255,255,.04);text-align:center;cursor:pointer;
+  transition:all .2s;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  -webkit-tap-highlight-color:transparent;
+}
+.bag-bin:hover,.bag-bin.active{border-color:rgba(255,220,0,.6);background:rgba(255,220,0,.08)}
+.bag-bin-icon{font-size:clamp(22px,4vw,30px)}
+.bag-bin-label{font-size:clamp(9px,2vw,12px);font-weight:800;letter-spacing:1px;color:rgba(255,255,255,.6)}
+.bag-score{font-family:'Lilita One',cursive;font-size:clamp(18px,4vw,26px);color:#ffcc00;text-align:center;margin-bottom:8px}
+.bag-combo{font-size:clamp(11px,2.5vw,14px);color:rgba(255,255,255,.4);text-align:center;letter-spacing:2px}
+
+/* === GAME 2: COCONUT CATCH === */
+.coco-field{
+  width:100%;max-width:420px;height:220px;
+  background:linear-gradient(180deg,#1a3a0a,#0d2008);
+  border-radius:14px;border:2px solid rgba(60,180,60,.2);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.falling-item{
+  position:absolute;top:-50px;font-size:clamp(24px,5vw,36px);
+  animation:fallDown linear forwards;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+@keyframes fallDown{from{top:-50px}to{top:110%}}
+.catcher{
+  position:absolute;bottom:10px;font-size:clamp(28px,6vw,44px);
+  transition:left .08s;transform:translateX(-50%);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+}
+.coco-controls{display:flex;gap:12px;width:100%;max-width:420px;margin-bottom:10px}
+.coco-btn{
+  flex:1;padding:18px 0;border-radius:14px;border:none;
+  font-size:clamp(20px,5vw,32px);cursor:pointer;
+  background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.12);
+  transition:all .1s;-webkit-tap-highlight-color:transparent;
+}
+.coco-btn:active{background:rgba(255,255,255,.18);transform:scale(.96)}
+.coco-stats{display:flex;gap:20px;justify-content:center}
+.coco-stat{text-align:center}
+.coco-stat-v{font-family:'Lilita One',cursive;font-size:clamp(22px,5vw,32px)}
+.coco-stat-l{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.4)}
+
+/* === GAME 3: SAND CASTLE BUILD (sequence) === */
+.castle-display{
+  width:100%;max-width:380px;min-height:120px;
+  background:rgba(245,230,163,.08);border:2px solid rgba(245,230,163,.2);
+  border-radius:14px;padding:16px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:8px;font-size:clamp(28px,6vw,42px);
+}
+.castle-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:380px;margin-bottom:10px}
+.castle-piece{
+  aspect-ratio:1;border-radius:12px;border:2px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);cursor:pointer;font-size:clamp(22px,5vw,32px);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.castle-piece:hover,.castle-piece:active{background:rgba(255,220,0,.15);border-color:rgba(255,220,0,.5);transform:scale(1.08)}
+.castle-piece.used{opacity:.3;cursor:not-allowed;transform:none!important}
+.castle-status{font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);text-align:center;min-height:28px}
+
+/* === GAME 4: TREASURE HUNT (memory grid) === */
+.treasure-grid{
+  display:grid;gap:8px;width:100%;max-width:380px;margin-bottom:12px;
+}
+.t-cell{
+  aspect-ratio:1;border-radius:10px;border:2px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(20px,4vw,28px);transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.t-cell:hover:not(.revealed):not(.disabled){background:rgba(255,220,0,.1);border-color:rgba(255,220,0,.4)}
+.t-cell.peek{background:rgba(255,220,0,.15);border-color:#ffcc00}
+.t-cell.revealed.good{background:rgba(68,255,136,.1);border-color:#44ff88;animation:revealPop .25s ease}
+.t-cell.revealed.bad{background:rgba(255,68,34,.1);border-color:#ff4422;animation:revealPop .25s ease}
+.t-cell.disabled{cursor:default}
+@keyframes revealPop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.treasure-stats{display:flex;gap:20px;justify-content:center;margin-bottom:10px}
+.tres-stat{text-align:center}
+.tres-stat-v{font-family:'Lilita One',cursive;font-size:clamp(22px,5vw,30px)}
+.tres-stat-l{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.4)}
+
+/* === GAME 5: KAYAK RACE (rhythm) === */
+.kayak-lane{
+  width:100%;max-width:440px;height:130px;
+  background:linear-gradient(180deg,#0a4a8a,#0a6aad);
+  border-radius:14px;border:2px solid rgba(30,160,220,.4);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.kayak-waves{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.04) 40px,rgba(255,255,255,.04) 42px);
+  animation:wavesMove 1s linear infinite;
+}
+@keyframes wavesMove{from{transform:translateX(0)}to{transform:translateX(-42px)}}
+.kayak-player{position:absolute;font-size:clamp(28px,6vw,42px);bottom:14px;transition:left .05s linear}
+.kayak-rival{position:absolute;font-size:clamp(24px,5vw,36px);bottom:16px;opacity:.7}
+.kayak-finish{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:clamp(24px,5vw,34px);opacity:.5}
+.beat-btn{
+  width:100%;max-width:440px;padding:20px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#0a6aad,#0a9acc);color:#fff;
+  font-family:'Lilita One',cursive;font-size:clamp(16px,4vw,22px);letter-spacing:3px;
+  cursor:pointer;transition:all .1s;box-shadow:0 5px 0 rgba(0,60,120,.5);
+  -webkit-tap-highlight-color:transparent;
+}
+.beat-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,60,120,.5)}
+.kayak-progress{width:100%;max-width:440px;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.kayak-pfill{height:100%;border-radius:4px;background:linear-gradient(90deg,#44ff88,#00cccc);transition:width .2s}
+.kayak-rival-pfill{height:100%;border-radius:4px;background:rgba(255,100,100,.5);transition:width .2s}
+.race-status{font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);text-align:center;margin-bottom:8px}
+
+/* === GAME 6: CAMPFIRE TRIVIA === */
+.trivia-fire{font-size:clamp(50px,10vw,72px);text-align:center;margin-bottom:12px;animation:fireDance .5s ease-in-out infinite alternate}
+@keyframes fireDance{from{transform:scale(1)rotate(-3deg)}to{transform:scale(1.06)rotate(3deg)}}
+.trivia-q{
+  max-width:400px;width:100%;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:16px 20px;margin-bottom:16px;
+  font-family:'Patrick Hand',cursive;font-size:clamp(14px,3vw,18px);
+  line-height:1.6;text-align:center;color:rgba(255,255,255,.9);
+}
+.trivia-opts{width:100%;max-width:400px;display:flex;flex-direction:column;gap:8px}
+.trivia-opt{
+  padding:13px 18px;border-radius:10px;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  font-family:'Patrick Hand',cursive;font-size:clamp(13px,2.8vw,16px);
+  color:rgba(255,255,255,.85);text-align:left;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.trivia-opt:hover{background:rgba(255,220,0,.1);border-color:rgba(255,220,0,.4);color:#fff;transform:translateX(4px)}
+.trivia-opt.correct{background:rgba(68,255,136,.15);border-color:#44ff88;color:#44ff88;pointer-events:none}
+.trivia-opt.wrong{background:rgba(255,68,34,.12);border-color:#ff4422;color:#ff7766;pointer-events:none}
+.trivia-opt:disabled,.trivia-opt[disabled]{opacity:.5;pointer-events:none}
+.trivia-score{font-family:'Lilita One',cursive;font-size:clamp(16px,4vw,24px);color:#ffcc00;text-align:center;margin-bottom:10px}
+
+/* === GAME 7: STORM RESCUE (swipe maze) === */
+.storm-grid{
+  display:grid;gap:4px;width:100%;max-width:340px;margin-bottom:14px;
+}
+.storm-cell{
+  aspect-ratio:1;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:clamp(16px,4vw,24px);
+  border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);
+  transition:background .15s;
+}
+.storm-cell.path{background:rgba(30,120,200,.2)}
+.storm-cell.player{background:rgba(255,200,0,.2);border-color:rgba(255,200,0,.5)}
+.storm-cell.goal{background:rgba(68,255,136,.15);border-color:rgba(68,255,136,.4)}
+.storm-cell.wall{background:rgba(255,255,255,.06)}
+.storm-cell.danger{background:rgba(255,68,34,.15)}
+.storm-cell.visited{background:rgba(30,120,200,.12)}
+.storm-dpad{
+  display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:8px;width:180px;
+}
+.dpad-btn{
+  padding:14px 0;border-radius:12px;border:2px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);font-size:clamp(18px,4vw,24px);
+  cursor:pointer;transition:all .1s;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.dpad-btn:active{background:rgba(255,255,255,.18);transform:scale(.93)}
+.dpad-empty{visibility:hidden}
+.storm-moves{font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);text-align:center;color:rgba(255,255,255,.5);margin-bottom:8px}
+
+/* === GAME 8: SUNSET PHOTOGRAPHY (timing) === */
+.photo-scene{
+  width:100%;max-width:420px;height:180px;
+  background:linear-gradient(180deg,#1a0a3a,#3a1a0a,#c88820,#e8a820);
+  border-radius:14px;border:2px solid rgba(255,180,50,.3);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.photo-sun{
+  position:absolute;font-size:clamp(36px,8vw,56px);
+  bottom:20px;transition:left .1s;
+}
+.photo-bird{position:absolute;font-size:clamp(16px,3vw,22px);animation:birdFly linear infinite}
+@keyframes birdFly{from{left:-40px;top:30px}to{left:calc(100% + 40px);top:60px}}
+.viewfinder{
+  position:absolute;inset:0;
+  border:4px solid rgba(255,255,255,.0);
+  border-radius:14px;transition:border-color .15s;
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+}
+.viewfinder.aim{border-color:rgba(255,220,0,.6)}
+.viewfinder.perfect{border-color:rgba(68,255,136,.8);animation:perfectFlash .2s ease 3}
+@keyframes perfectFlash{0%,100%{background:transparent}50%{background:rgba(68,255,136,.1)}}
+.photo-slider-wrap{width:100%;max-width:420px;margin-bottom:12px}
+.photo-slider{width:100%;appearance:none;height:10px;border-radius:5px;background:linear-gradient(90deg,#1a0a3a,#c88820);outline:none;cursor:pointer}
+.photo-slider::-webkit-slider-thumb{appearance:none;width:28px;height:28px;border-radius:50%;background:#ffcc00;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.shutter-btn{
+  width:100%;max-width:420px;padding:18px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#ff8800,#ffcc00);color:#000;
+  font-family:'Lilita One',cursive;font-size:clamp(16px,4vw,22px);letter-spacing:3px;
+  cursor:pointer;box-shadow:0 5px 0 rgba(150,60,0,.4);transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.shutter-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(150,60,0,.4)}
+.photo-results{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.photo-shot{font-size:clamp(24px,5vw,32px);text-align:center;min-width:48px}
+
+/* === GAME 9: GOODBYE FIREWORKS (timing/memory) === */
+.fireworks-sky{
+  width:100%;max-width:440px;height:200px;
+  background:linear-gradient(180deg,#0a0a1a,#1a0a2a);
+  border-radius:14px;border:2px solid rgba(150,50,200,.3);
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.fw-burst{
+  position:absolute;font-size:clamp(24px,5vw,38px);
+  transform:translate(-50%,-50%);
+  animation:fwPop .5s ease forwards;pointer-events:none;
+}
+@keyframes fwPop{0%{transform:translate(-50%,-50%) scale(0);opacity:1}70%{transform:translate(-50%,-50%) scale(1.3);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+.fw-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:440px;margin-bottom:10px}
+.fw-btn{
+  padding:14px 0;border-radius:12px;border:2px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);font-size:clamp(18px,4vw,26px);
+  cursor:pointer;transition:all .1s;-webkit-tap-highlight-color:transparent;
+}
+.fw-btn:active{transform:scale(.92);filter:brightness(1.4)}
+.fw-seq-display{
+  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  min-height:40px;margin-bottom:10px;
+}
+.fw-seq-icon{font-size:clamp(20px,4vw,28px);opacity:.5;transition:opacity .2s}
+.fw-seq-icon.lit{opacity:1;animation:seqLit .3s ease}
+@keyframes seqLit{0%{transform:scale(.8)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.fw-status{font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);text-align:center;min-height:28px}
+
+/* ══ MISC ══ */
+.flash-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;animation:flashOut .35s ease forwards}
+@keyframes flashOut{0%{opacity:.4}100%{opacity:0}}
+.flash-red{background:#ff4422}
+.flash-green{background:#44ff88}
+</style>
+</head>
+<body>
+
+<!-- ══════════ INTRO ══════════ -->
+<div class="screen active" id="s-intro">
+  <div class="intro-sky" id="intro-sky">
+    <div class="intro-sun">☀️</div>
+  </div>
+  <div class="palm-decor palm-l">🌴</div>
+  <div class="palm-decor palm-r">🌴</div>
+  <div class="intro-content">
+    <div class="intro-kicker">UMA AVENTURA INESQUECÍVEL</div>
+    <div class="intro-title">🏝️ ILHA DO <span class="accent">CAOS</span></div>
+    <div class="intro-sub">Férias que deram tudo — e quero dizer TUDO — errado</div>
+    <div class="intro-chars" id="intro-chars"></div>
+    <div class="intro-synopsis">
+      A <strong>Pollyana</strong> organizou as melhores férias da vida pra turma toda. Ilha particular, resort de luxo, tudo pago.<br>
+      O avião pousou. O resort? <strong>Não existia.</strong> O guia? <strong>Fugiu com as malas.</strong><br>
+      Agora a gangue está perdida numa ilha selvagem, sem sinal, sem suprimentos — e <em>discutindo quem teve a ideia de ir.</em><br>
+      <strong>Sobrevivam, resgatem, e de alguma forma... se divirtam. 🌴</strong>
+    </div>
+    <button class="btn-start" onclick="startGame()">🌊 VAMOS NESSA!</button>
+  </div>
+</div>
+
+<!-- ══════════ MAP ══════════ -->
+<div class="screen" id="s-map">
+  <div id="map-bg"><div class="map-wave"></div></div>
+  <div class="map-ui">
+    <div class="map-topbar">
+      <div class="map-title-bar">🏝️ ILHA DO CAOS</div>
+      <div class="chaos-meter-wrap">
+        <div class="chaos-label">CAOS</div>
+        <div class="chaos-bar"><div class="chaos-fill" id="chaos-fill" style="width:20%"></div></div>
+        <div class="chaos-val" id="chaos-val">20</div>
+      </div>
+      <div class="chapter-badge" id="chap-badge">MISSÃO 1/9</div>
+      <div class="stars-display" id="map-stars">⭐×0</div>
+    </div>
+    <div class="map-area" id="map-area">
+      <!-- locations injected by JS -->
+    </div>
+    <div class="story-panel" id="story-panel">
+      <div class="story-speaker" id="sp-speaker"></div>
+      <div class="story-text" id="sp-text"></div>
+      <div id="sp-choices"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GAME SCREEN ══════════ -->
+<div class="screen" id="s-game">
+  <div class="game-container">
+    <div class="game-topbar">
+      <div class="gt-char" id="gt-char">🌻</div>
+      <div class="gt-info">
+        <div class="gt-title" id="gt-title">Mini-game</div>
+        <div class="gt-sub" id="gt-sub">Subtítulo</div>
+      </div>
+      <div class="gt-timer-wrap">
+        <div class="gt-timer" id="gt-timer">30</div>
+        <div class="gt-tbar"><div class="gt-tfill" id="gt-tfill" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="game-body" id="game-body"></div>
+  </div>
+</div>
+
+<!-- ══════════ RESULT CARD ══════════ -->
+<div id="result-card">
+  <div class="rc-emoji" id="rc-emoji">🎉</div>
+  <div class="rc-title" id="rc-title">INCRÍVEL!</div>
+  <div class="rc-stars" id="rc-stars">⭐⭐⭐</div>
+  <div class="rc-story" id="rc-story"></div>
+  <div class="rc-quote" id="rc-quote"></div>
+  <button class="rc-btn" id="rc-btn" onclick="continueFromResult()">CONTINUAR →</button>
+</div>
+
+<!-- ══════════ GOOD ENDING ══════════ -->
+<div class="screen" id="s-end-good">
+  <div class="end-wrap">
+    <span class="end-emoji-big">🌅</span>
+    <div class="end-title" style="color:#ffcc00">RESGATADAS<br>E FELIZES!</div>
+    <div class="end-story" id="end-story-good"></div>
+    <div class="end-chars-grid" id="end-chars-good"></div>
+    <div class="end-total" id="end-total-good"></div>
+    <div class="end-btn-wrap">
+      <button class="end-btn primary" onclick="restartGame()">🔄 JOGAR DE NOVO</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BAD ENDING ══════════ -->
+<div class="screen" id="s-end-bad">
+  <div class="end-wrap">
+    <span class="end-emoji-big">🌊</span>
+    <div class="end-title" style="color:#ff4422">ENGOLIDAS<br>PELA ILHA!</div>
+    <div class="end-story" id="end-story-bad"></div>
+    <div class="end-btn-wrap" style="margin-top:24px">
+      <button class="end-btn primary" onclick="restartGame()">🔄 TENTAR DE NOVO</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const CAST = {
+  Pollyana:{emoji:'🌻',color:'#f5c518',short:'Poll'},
+  Carluz:  {emoji:'⚡',color:'#ff5533',short:'Carl'},
+  Eros:    {emoji:'🔮',color:'#9944ff',short:'Eros'},
+  Stephany:{emoji:'📐',color:'#2288ff',short:'Step'},
+  Mary:    {emoji:'🌿',color:'#33cc66',short:'Mary'},
+  Mel:     {emoji:'🌸',color:'#ff44aa',short:'Mel'},
+  Joy:     {emoji:'🍷',color:'#ff8800',short:'Joy'},
+  Ellie:   {emoji:'🌊',color:'#00cccc',short:'Ell'},
+  Elisa:   {emoji:'💜',color:'#cc4488',short:'Eli'},
+};
+
+const LOCATIONS = [
+  {id:'praia',    name:'Praia Principal', icon:'🏖️', pos:{left:'50%',top:'72%'}},
+  {id:'floresta', name:'Floresta Densa',  icon:'🌳', pos:{left:'28%',top:'45%'}},
+  {id:'caverna',  name:'Caverna Secreta', icon:'🗿', pos:{left:'18%',top:'62%'}},
+  {id:'topo',     name:'Topo do Vulcão',  icon:'🌋', pos:{left:'50%',top:'28%'}},
+  {id:'recife',   name:'Recife de Coral', icon:'🐚', pos:{left:'76%',top:'60%'}},
+  {id:'rio',      name:'Rio da Selva',    icon:'💧', pos:{left:'36%',top:'30%'}},
+  {id:'ruinas',   name:'Ruínas Antigas',  icon:'🏛️', pos:{left:'65%',top:'38%'}},
+  {id:'farol',    name:'Farol Quebrado',  icon:'🔦', pos:{left:'80%',top:'25%'}},
+  {id:'resgate',  name:'Ponto de Resgate',icon:'🚁', pos:{left:'50%',top:'50%'}},
+];
+
+// 9 chapters: story moment + mini-game
+const CHAPTERS = [
+  {
+    loc:'praia', char:'Pollyana', bg:'linear-gradient(160deg,#0a3a6a,#1a7aa0)',
+    title:'🏖️ ONDE ESTAMOS??',
+    sub:'Pollyana sorteia quem organiza as bagagens',
+    time:35,
+    story:{
+      speaker:'🌻 Pollyana',color:'#f5c518',
+      text:'Gente, CALMA. Eu li num blog que essa ilha tem recursos naturais incríveis! Vamos separar o que a gente tem nas malas antes que a maré leve tudo.',
+      choices:[
+        {text:'"Você disse resort de LUXO, Pollyana!"',chaos:15,effect:'Carluz furiosa. Caos +15.'},
+        {text:'"Tá bom, tá bom, vamos organizar o que temos."',chaos:-5,effect:'Atitude madura. Caos -5.'},
+      ]
+    },
+    game:{id:'bagagem',char:'Carluz',emoji:'⚡',sub:'Separe as bagagens antes da maré levar tudo!'},
+    result:{
+      stars3:{story:'Carluz separou tudo em tempo recorde! Descobriu comida, repelente e — milagrosamente — um violão.',quote:'"Isso aqui é minha missão. Logística é comigo."  — Carluz ⚡'},
+      stars2:{story:'Maioria das coisas salva. Mas Joy perdeu a mala do vinho.',quote:'"A mala DO VINHO, Carluz?? PRIORIDADES!"  — Joy 🍷'},
+      stars1:{story:'Caos total. Maré levou metade. Pollyana fingiu que estava bem.',quote:'"Tá tudo ótimo! 🌻... não tá."  — Pollyana'},
+    }
+  },
+  {
+    loc:'floresta', char:'Eros', bg:'linear-gradient(160deg,#0a2a0a,#1a4a1a)',
+    title:'🌳 FRUTAS MÁGICAS',
+    sub:'Eros encontra comida na floresta',
+    time:40,
+    story:{
+      speaker:'🔮 Eros',color:'#9944ff',
+      text:'Sinto uma energia especial nessa floresta. Os cogumelos cantam para mim. As árvores sussurram os nomes dos frutos comestíveis. Deixem-me guiar vocês... espiritualmente.',
+      choices:[
+        {text:'"Eros, você comeu alguma coisa estranha?"',chaos:10,effect:'Eros fica ofendido. Caos +10.'},
+        {text:'"Ok, mas confirma no Google antes. Ah, não tem sinal."',chaos:5,effect:'Eros suspira profundamente. Caos +5.'},
+      ]
+    },
+    game:{id:'cocos',char:'Eros',emoji:'🔮',sub:'Pegue os cocos bons e evite os podres!'},
+    result:{
+      stars3:{story:'Eros coletou frutas suficientes para 3 dias. Disse que as árvores guiaram suas mãos. Ninguém questionou.',quote:'"O universo provê. Mas confesso que o abacaxi caiu sozinho."  — Eros 🔮'},
+      stars2:{story:'Comida pra 1 dia. Eros ficou muito tempo conversando com um pé de palmeira.',quote:'"Ela tinha muito a dizer."  — Eros (sério)'},
+      stars1:{story:'Quase nenhuma fruta. Eros veio com um único cogumelo e uma "vibração muito boa".',quote:'"A floresta disse que não estava na hora ainda."  — Eros 🔮'},
+    }
+  },
+  {
+    loc:'caverna', char:'Mary', bg:'linear-gradient(160deg,#1a1a0a,#2a2a1a)',
+    title:'🗿 A CAVERNA DA VERDADE',
+    sub:'Mary descobre abrigo e plantas medicinais',
+    time:45,
+    story:{
+      speaker:'🌿 Mary',color:'#33cc66',
+      text:'Encontrei uma caverna com plantas medicinais raríssimas! Mas precisa de tempo pra identificar qual é qual. Se misturar errado... bom, alguém já ficou dormindo por 3 dias numa situação parecida.',
+      choices:[
+        {text:'"Quem foi que dormiu?"',chaos:0,effect:'Mary muda de assunto rapidamente. Suspeito.'},
+        {text:'"Confiamos em você, Mary. Vai lá."',chaos:-10,effect:'Mary fica emocionada. Caos -10.'},
+      ]
+    },
+    game:{id:'castelo',char:'Mary',emoji:'🌿',sub:'Monte a poção na ordem certa!'},
+    result:{
+      stars3:{story:'Mary montou o abrigo perfeito e criou remédio natural pra picada de mosquito. A gangue passou a noite confortável.',quote:'"Aprendi com minha avó. E com um documentário da BBC."  — Mary 🌿'},
+      stars2:{story:'Abrigo razoável. Remédio funcional. A picada de Joy ficou "apenas" do tamanho de uma moeda.',quote:'"UMA MOEDA, Mary??"  — Joy 🍷'},
+      stars1:{story:'A poção de Mary fez Stephany dormir por 11 horas. Por acidente. Mas ela disse que foi "ótimo".',quote:'"Foi o melhor sono da minha vida. Volto a fazer isso."  — Stephany'},
+    }
+  },
+  {
+    loc:'topo', char:'Stephany', bg:'linear-gradient(160deg,#2a0a0a,#4a1010)',
+    title:'🌋 MAPA DO DESASTRE',
+    sub:'Stephany sobe o vulcão pra ter visão geral',
+    time:30,
+    story:{
+      speaker:'📐 Stephany',color:'#2288ff',
+      text:'Calculei que do topo consigo mapear toda a ilha, identificar recursos, rotas de escape e probabilidade de resgate. Único problema: o vulcão está tecnicamente... ativo.',
+      choices:[
+        {text:'"ATIVO?? Stephany que loucura é essa?"',chaos:20,effect:'Todo mundo em pânico. Caos +20.'},
+        {text:'"Qual a probabilidade de erupção?"',chaos:5,effect:'"12.7%. Aceitável." — Stephany. Caos +5.'},
+      ]
+    },
+    game:{id:'tesouro',char:'Stephany',emoji:'📐',sub:'Encontre os recursos no mapa antes que o vulcão acorde!'},
+    result:{
+      stars3:{story:'Stephany mapeou tudo, encontrou um farol a 3km e uma praia de resgate. Voltou com o cabelo levemente chamuscado mas totalmente profissional.',quote:'"Risco calculado. Resultado otimizado. Cabelo: subótimo."  — Stephany'},
+      stars2:{story:'Mapa razoável, algumas lacunas. Stephany achou uma fonte de água mas "perdeu" as coordenadas exatas.',quote:'"Foi perto de uma pedra... redonda. Há muitas pedras redondas."  — Stephany'},
+      stars1:{story:'O vulcão tossiu. Stephany desceu em 40 segundos. Sem mapa. Com o cabelo completamente diferente.',quote:'"Dados insuficientes para análise."  — Stephany (visivelmente abalada)'},
+    }
+  },
+  {
+    loc:'recife', char:'Mel', bg:'linear-gradient(160deg,#0a1a3a,#0a3a6a)',
+    title:'🐚 PEIXE NA REDE',
+    sub:'Mel encontra um telefone de emergência no recife',
+    time:40,
+    story:{
+      speaker:'🌸 Mel',color:'#ff44aa',
+      text:'Gente! Achei uma caixa impermeável no recife com um rádio de emergência! Mas tá com a bateria quase morta, então alguém precisa passar as informações MUITO rápido antes que desligue!',
+      choices:[
+        {text:'"MEL! Você achou o quê? Gênio! Herói!"',chaos:-15,effect:'Mel fica radiante. Caos -15.'},
+        {text:'"Por que você foi pro recife sozinha??"',chaos:5,effect:'Mel faz carinha de culpa. Caos +5.'},
+      ]
+    },
+    game:{id:'kayak',char:'Mel',emoji:'🌸',sub:'Rode até o barco de resgate antes da bateria acabar!'},
+    result:{
+      stars3:{story:'Mel chegou ao barco, transmitiu as coordenadas e ainda fez amizade com o guarda-costas. O resgate está a caminho!',quote:'"Ele disse que chega em 24h! E que eu tenho energia contagiante!"  — Mel 🌸'},
+      stars2:{story:'Transmissão parcial. Sabem a ilha mas não a posição exata. Resgate deve demorar mais.',quote:'"Eu tentei! O sinal era péssimo!"  — Mel (genuinamente estressada)'},
+      stars1:{story:'Mel perdeu a corrida pro barco, a bateria morreu. Mas achou um caranguejo super simpático.',quote:'"Chamei ele de Carlos. A gente se entende."  — Mel 🌸'},
+    }
+  },
+  {
+    loc:'rio', char:'Joy', bg:'linear-gradient(160deg,#1a0a00,#3a1a00)',
+    title:'💧 FOGUEIRA SAGRADA',
+    sub:'Joy lidera a fogueira — e o primeiro drama sério',
+    time:50,
+    story:{
+      speaker:'🍷 Joy',color:'#ff8800',
+      text:'Alguém precisa manter o moral alto. E já que minhas habilidades claramente excedem as de todos aqui, organizarei uma fogueira e um jogo de perguntas. Isso é liderança. Vocês são bem-vindos.',
+      choices:[
+        {text:'"Joy, você está... funcionando como líder?"',chaos:0,effect:'Joy inclina a cabeça como realeza.'},
+        {text:'"Por favor, qualquer coisa menos ficar aqui parada."',chaos:-8,effect:'Joy orgulhosa. Caos -8.'},
+      ]
+    },
+    game:{id:'trivia',char:'Joy',emoji:'🍷',sub:'Responda as perguntas de sobrevivência da Joy!'},
+    result:{
+      stars3:{story:'Noite de fogueira incrível, todos animados. Joy fez um discurso de 8 minutos. Pollyana chorou (de emoção).',quote:'"Sabia que eu tinha vocação pra TED Talk."  — Joy 🍷'},
+      stars2:{story:'Fogueira ok, algumas perguntas erradas. Joy declarou que "algumas pessoas claramente não estudaram sobrevivência".',quote:'"Não vou citar nomes. Carluz."  — Joy'},
+      stars1:{story:'Desastre de trivia. Joy cancela o jogo com drama máximo. Dorme brava.',quote:'"Esta ilha não merece meu intelecto."  — Joy (resmungando)'},
+    }
+  },
+  {
+    loc:'ruinas', char:'Ellie', bg:'linear-gradient(160deg,#0a1a2a,#1a2a3a)',
+    title:'🏛️ ROTA DE FUGA',
+    sub:'Ellie navega pelas ruínas pra achar saída',
+    time:35,
+    story:{
+      speaker:'🌊 Ellie',color:'#00cccc',
+      text:'...(apontando pro mapa de ruínas) ...(gesticula indicando caminho) ...(olha pra você esperando).',
+      choices:[
+        {text:'"Você sabe o caminho, né Ellie?" (ela acena com a cabeça)',chaos:0,effect:'Ellie. Confiável. Silenciosa.'},
+        {text:'"Ellie fala alguma coisa, por favor"',chaos:10,effect:'Ellie pisca uma vez. Isso é tudo que você tem. Caos +10.'},
+      ]
+    },
+    game:{id:'labirinto',char:'Ellie',emoji:'🌊',sub:'Navegue pelas ruínas sem cair nas armadilhas!'},
+    result:{
+      stars3:{story:'Ellie encontrou a rota perfeita, uma saída secreta E um antigo tesouro de moedas de ouro. Tudo em silêncio absoluto.',quote:'"..."  — Ellie (mas o sorriso disse tudo) 🌊'},
+      stars2:{story:'Rota funcional. Saída encontrada. Ellie também achou algo nas ruínas mas guardou pra ela.',quote:'"..."  — Ellie (misteriosa)'},
+      stars1:{story:'Ellie se perdeu. Voltou 2 horas depois. Não explicou nada. Parecia satisfeita consigo mesma.',quote:'"..."  — Ellie'},
+    }
+  },
+  {
+    loc:'farol', char:'Elisa', bg:'linear-gradient(160deg,#1a0a1a,#2a1a2a)',
+    title:'🔦 O SINAL DE RESGATE',
+    sub:'Elisa conserta o farol para sinalizar para barcos',
+    time:40,
+    story:{
+      speaker:'💜 Elisa',color:'#cc4488',
+      text:'Eu sei consertar! Trabalhei num barco por 3 semanas em 2019. Bem... tecnicamente eu era garçonete. Mas eu OBSERVEI coisas elétricas. Deixa eu tentar. Provavelmente não vai explodir.',
+      choices:[
+        {text:'"PROVAVELMENTE??"',chaos:20,effect:'Pânico geral. Caos +20.'},
+        {text:'"Elisa, você é nossa única esperança. Vai lá."',chaos:-5,effect:'Elisa fica sentimental. Caos -5.'},
+      ]
+    },
+    game:{id:'fotos',char:'Elisa',emoji:'💜',sub:'Fotografe o sinal perfeito pro barco de resgate te ver!'},
+    result:{
+      stars3:{story:'O farol funcionou! E as fotos que Elisa tirou do pôr do sol viraram viral no Instagram depois do resgate.',quote:'"Arte. Pura arte. Ah, e o resgate também."  — Elisa 💜'},
+      stars2:{story:'Sinal funcionando, mas fraco. Barco viu mas vai demorar mais pra confirmar posição.',quote:'"Pelo menos as fotos ficaram lindas!"  — Elisa'},
+      stars1:{story:'O farol piscou 3 vezes e apagou. Mas Elisa tirou as melhores fotos da vida dela no processo.',quote:'"Fracasso? Não. Rebranding."  — Elisa 💜'},
+    }
+  },
+  {
+    loc:'resgate', char:'Pollyana', bg:'linear-gradient(160deg,#0a2a0a,#0a4a2a)',
+    title:'🚁 A ÚLTIMA CHANCE',
+    sub:'Pollyana sinaliza o helicóptero de resgate',
+    time:40,
+    story:{
+      speaker:'🌻 Pollyana',color:'#f5c518',
+      text:'GENTE! OUÇO UM HELICÓPTERO! Precisa lançar o sinal luminoso AGORA — mas é uma sequência específica! Errar significa que eles vão achar que é um sinal de "tudo bem, não precisamos de resgate".',
+      choices:[
+        {text:'"Pollyana, VOCÊ organizou essa viagem..."',chaos:25,effect:'Pollyana faz carinha de culpa máxima. Caos +25.'},
+        {text:'"Foca! A gente sai daqui juntas!"',chaos:-20,effect:'Pollyana se emociona. Caos -20. Momento épico.'},
+      ]
+    },
+    game:{id:'fogos',char:'Pollyana',emoji:'🌻',sub:'Lance os fogos na sequência certa pra chamar o resgate!'},
+    result:{
+      stars3:{story:'Sequência perfeita! O helicóptero pousou em 5 minutos. As 9 estavam a salvo. Pollyana chorou muito.',quote:'"Eu sabia que ia dar certo! Sempre soube! (Mas nunca mais organizo viagem)"  — Pollyana 🌻'},
+      stars2:{story:'Sequência quase certa. O helicóptero ficou confuso mas achou a turma. Saíram salvas, um pouco mais caóticas.',quote:'"Qualquer coisa que termina bem, termina bem!"  — Pollyana 🌻'},
+      stars1:{story:'Sequência errada. O piloto achou que era show de fogos. Mas pousou de curiosidade. Saíram salvas por acidente.',quote:'"Tudo que faço tem um propósito... às vezes oculto."  — Pollyana'},
+    }
+  },
+];
+
+const TRIVIA_QS = [
+  {q:'O que fazer se vir um tubarão nadando perto?',opts:['Nadar rápido em zigue-zague','Ficar imóvel e sair devagar','Gritar e agitar os braços','Mergulhar embaixo dele'],corr:1},
+  {q:'Como fazer fogo sem isqueiro na selva?',opts:['Esfregar duas pedras de sílex','Rezar muito','Ligar o bluetooth','Esperar a Mary aparecer'],corr:0},
+  {q:'Qual planta NÃO é comestível geralmente?',opts:['Coco verde','Banana da mata','Cogumelo colorido brilhante','Abacaxi silvestre'],corr:2},
+  {q:'Se perdida na ilha, como encontrar norte?',opts:['Pelo lado que o musgo cresce','Pelas estrelas ou pelo sol','Seguindo pássaros','Perguntando para a Eros'],corr:1},
+  {q:'O que fazer com água de chuva para beber?',opts:['Beber direto, é purinha','Ferver ou filtrar primeiro','Misturar com sumo de limão','Nada, é perigosa'],corr:1},
+  {q:'Carluz corre 2km em 10min. Que velocidade?',opts:['10 km/h','15 km/h','12 km/h','Muito rápida'],corr:2},
+  {q:'Qual sinal internacional de socorro?',opts:['Acender fogo de noite','Três sinais repetidos (SOS)','Agitar um pano colorido','Qualquer coisa chamativa'],corr:1},
+];
+
+// ══════════════════════════════════════════════
+//  GAME STATE
+// ══════════════════════════════════════════════
+let G = {
+  chapter: 0,
+  chaos: 20,
+  stars: [],
+  totalStars: 0,
+  choicesMade: [],
+  active: false,
+};
+
+// Timer
+let _timer = null, _timerLeft = 0, _timerDur = 0;
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function initIntro(){
+  const el = document.getElementById('intro-chars');
+  el.innerHTML = Object.entries(CAST).map(([name,c],i)=>`
+    <div class="intro-char" style="border-color:${c.color}66;animation-delay:${i*.12}s">
+      ${c.emoji} <strong style="color:${c.color}">${name}</strong>
+    </div>`).join('');
+  // clouds
+  const sky = document.getElementById('intro-sky');
+  ['☁️','🌤️','⛅','☁️','🌥️'].forEach((cl,i)=>{
+    const d = document.createElement('div');
+    d.className='cloud';d.textContent=cl;
+    d.style.cssText=`top:${8+i*14}%;animation-duration:${18+i*6}s;animation-delay:-${i*4}s`;
+    sky.appendChild(d);
+  });
+}
+
+function startGame(){
+  G = {chapter:0,chaos:20,stars:[],totalStars:0,choicesMade:[],active:false};
+  buildMap();
+  showScreen('s-map');
+  setTimeout(()=>openStoryPanel(0), 500);
+}
+
+function restartGame(){
+  showScreen('s-intro');
+}
+
+// ══════════════════════════════════════════════
+//  MAP
+// ══════════════════════════════════════════════
+function buildMap(){
+  const area = document.getElementById('map-area');
+  area.innerHTML = LOCATIONS.map((loc,i)=>{
+    const done = i < G.chapter;
+    const avail = i === G.chapter;
+    const locked = i > G.chapter;
+    const cls = done?'done':avail?'available':'locked';
+    const ch = CHAPTERS[i];
+    return `<div class="loc-btn ${cls}" id="loc-${loc.id}"
+      style="left:${loc.pos.left};top:${loc.pos.top};transform:translate(-50%,-50%)"
+      onclick="${avail?`openStoryPanel(${i})`:''}">
+      <span class="loc-icon">${loc.icon}</span>
+      <div class="loc-name">${loc.name}</div>
+      <div class="loc-status" style="color:${done?'#44ff88':avail?'#ffcc00':'rgba(255,255,255,.3)'}">
+        ${done?('⭐'.repeat(G.stars[i]||0)+'☆'.repeat(3-(G.stars[i]||0))):avail?'▶ JOGAR':'🔒'}
+      </div>
+    </div>`;
+  }).join('');
+  updateMapUI();
+}
+
+function updateMapUI(){
+  const chaos = Math.min(100, Math.round(G.chaos));
+  document.getElementById('chaos-fill').style.width = chaos+'%';
+  document.getElementById('chaos-val').textContent = chaos;
+  document.getElementById('chap-badge').textContent = `MISSÃO ${G.chapter+1}/9`;
+  document.getElementById('map-stars').textContent = `⭐×${G.totalStars}`;
+}
+
+function openStoryPanel(idx){
+  const ch = CHAPTERS[idx];
+  const s = ch.story;
+  const panel = document.getElementById('story-panel');
+  document.getElementById('sp-speaker').innerHTML =
+    `<span style="font-size:24px">${s.speaker.split(' ')[0]}</span>
+     <span style="color:${s.color}">${s.speaker.split(' ').slice(1).join(' ')}</span>`;
+  document.getElementById('sp-text').innerHTML = s.text;
+  const choicesEl = document.getElementById('sp-choices');
+  choicesEl.innerHTML = s.choices.map((c,i)=>`
+    <div class="story-choice" onclick="makeChoice(${idx},${i})">${c.text}</div>`).join('') +
+    `<button class="story-btn-next" id="btn-play-now" style="display:none" onclick="launchGame(${idx})">▶ JOGAR AGORA!</button>`;
+  panel.classList.add('open');
+}
+
+function makeChoice(chapIdx, choiceIdx){
+  const ch = CHAPTERS[chapIdx];
+  const choice = ch.story.choices[choiceIdx];
+  G.chaos = Math.min(100, Math.max(0, G.chaos + (choice.chaos||0)));
+  G.choicesMade.push({chap:chapIdx,choice:choiceIdx});
+  // Feedback
+  document.querySelectorAll('.story-choice').forEach(el=>el.style.opacity='.4');
+  document.querySelectorAll('.story-choice')[choiceIdx].style.cssText='opacity:1;border-color:#ffcc00;background:rgba(255,220,0,.08)';
+  // Show effect
+  const eff = document.createElement('div');
+  eff.style.cssText='font-size:12px;color:#aaa;font-style:italic;margin-top:8px;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:8px';
+  eff.textContent = choice.effect;
+  document.getElementById('sp-choices').insertBefore(eff, document.getElementById('btn-play-now'));
+  document.getElementById('btn-play-now').style.display='block';
+  updateMapUI();
+}
+
+function launchGame(idx){
+  document.getElementById('story-panel').classList.remove('open');
+  const ch = CHAPTERS[idx];
+  // Setup game screen
+  document.getElementById('gt-char').textContent = CAST[ch.game.char].emoji;
+  document.getElementById('gt-title').textContent = ch.title;
+  document.getElementById('gt-sub').textContent = ch.game.sub;
+  document.getElementById('gt-timer').textContent = ch.time;
+  document.getElementById('gt-tfill').style.width = '100%';
+  showScreen('s-game');
+  G.active = true;
+  launchMiniGame(ch.game.id, ch);
+}
+
+// ══════════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════════
+function startGameTimer(seconds, onEnd){
+  _timerDur = seconds; _timerLeft = seconds * 10;
+  clearInterval(_timer);
+  _timer = setInterval(()=>{
+    _timerLeft--;
+    const pct = Math.max(0,(_timerLeft/(_timerDur*10))*100);
+    document.getElementById('gt-tfill').style.width = pct+'%';
+    document.getElementById('gt-timer').textContent = Math.ceil(_timerLeft/10);
+    if(_timerLeft<=0){ clearInterval(_timer); if(onEnd) onEnd(); }
+  },100);
+}
+function stopTimer(){ clearInterval(_timer); }
+
+// ══════════════════════════════════════════════
+//  MINI-GAME ROUTER
+// ══════════════════════════════════════════════
+function launchMiniGame(id, ch){
+  const body = document.getElementById('game-body');
+  body.innerHTML = '';
+  if(id==='bagagem') startBagagem(ch);
+  else if(id==='cocos') startCocos(ch);
+  else if(id==='castelo') startCastelo(ch);
+  else if(id==='tesouro') startTesouro(ch);
+  else if(id==='kayak') startKayak(ch);
+  else if(id==='trivia') startTrivia(ch);
+  else if(id==='labirinto') startLabirinto(ch);
+  else if(id==='fotos') startFotos(ch);
+  else if(id==='fogos') startFogos(ch);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 1: BAGAGEM RUSH
+// ══════════════════════════════════════════════
+let BG={score:0,correct:0,wrong:0,combo:1,running:false,selected:null,items:[]};
+const BAG_ITEMS=[
+  {e:'🍕',cat:'comida'},{e:'🥤',cat:'comida'},{e:'🍌',cat:'comida'},{e:'🥫',cat:'comida'},
+  {e:'👙',cat:'roupa'},{e:'👕',cat:'roupa'},{e:'🩲',cat:'roupa'},{e:'👗',cat:'roupa'},
+  {e:'💊',cat:'util'},{e:'🔦',cat:'util'},{e:'🪢',cat:'util'},{e:'🔑',cat:'util'},
+  {e:'💄',cat:'inutil'},{e:'🎮',cat:'inutil'},{e:'📺',cat:'inutil'},{e:'🪞',cat:'inutil'},
+];
+const BAG_BINS=[
+  {cat:'comida',icon:'🍎',label:'COMIDA'},
+  {cat:'roupa',icon:'👕',label:'ROUPA'},
+  {cat:'util',icon:'🔧',label:'ÚTIL'},
+  {cat:'inutil',icon:'🚮',label:'INÚTIL'},
+];
+
+function startBagagem(ch){
+  BG={score:0,correct:0,wrong:0,combo:1,running:true,selected:null,items:[]};
+  const body = document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="bag-score" id="bg-score">Pontos: 0</div>
+    <div class="bag-combo" id="bg-combo">COMBO x1</div>
+    <div class="bag-conveyor" id="conveyor"></div>
+    <div class="bag-bins" id="bag-bins">
+      ${BAG_BINS.map(b=>`<div class="bag-bin" id="bin-${b.cat}" onclick="sortBag('${b.cat}')">
+        <div class="bag-bin-icon">${b.icon}</div>
+        <div class="bag-bin-label">${b.label}</div>
+      </div>`).join('')}
+    </div>`;
+  spawnBagItem();
+  startGameTimer(ch.time, ()=>endBagagem(ch));
+}
+
+function spawnBagItem(){
+  if(!BG.running)return;
+  const item = BAG_ITEMS[Math.floor(Math.random()*BAG_ITEMS.length)];
+  const conv = document.getElementById('conveyor');
+  if(!conv)return;
+  const el = document.createElement('div');
+  el.className='bag-item';el.textContent=item.e;
+  const dur = Math.max(1.8,3.2-BG.score*0.04);
+  el.style.animationDuration=dur+'s';
+  el.style.top=(20+Math.random()*50)+'px';
+  el.dataset.cat=item.cat;
+  el.onclick=()=>{ BG.selected=el; el.style.background='rgba(255,220,0,.2)';el.style.borderRadius='8px'; document.querySelectorAll('.bag-bin').forEach(b=>b.classList.add('active')); };
+  conv.appendChild(el);
+  BG.items.push(el);
+  el.addEventListener('animationend',()=>{
+    if(!el.dataset.sorted){ BG.wrong++;BG.combo=1;updateBagUI(); }
+    el.remove();
+  });
+  setTimeout(spawnBagItem, Math.max(700,1500-BG.score*30));
+}
+
+function sortBag(cat){
+  if(!BG.selected)return;
+  const isRight = BG.selected.dataset.cat===cat;
+  BG.selected.dataset.sorted='1';
+  if(isRight){ BG.correct++;BG.combo++;BG.score+=10*BG.combo;flashColor('green'); }
+  else{ BG.wrong++;BG.combo=1;flashColor('red'); }
+  BG.selected.remove();BG.selected=null;
+  document.querySelectorAll('.bag-bin').forEach(b=>b.classList.remove('active'));
+  updateBagUI();
+}
+
+function updateBagUI(){
+  const s=document.getElementById('bg-score');const c=document.getElementById('bg-combo');
+  if(s)s.textContent=`Pontos: ${BG.score}`;
+  if(c)c.textContent=`COMBO x${BG.combo}`;
+}
+
+function endBagagem(ch){
+  BG.running=false;
+  const stars=BG.correct>=12?3:BG.correct>=7?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 2: COCONUT CATCH
+// ══════════════════════════════════════════════
+let CC={score:0,lives:3,pos:50,running:false,spawnT:null};
+
+function startCocos(ch){
+  CC={score:0,lives:3,pos:50,running:true,spawnT:null};
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="coco-stats">
+      <div class="coco-stat"><div class="coco-stat-v" id="cc-score">0</div><div class="coco-stat-l">PONTOS</div></div>
+      <div class="coco-stat"><div class="coco-stat-v" id="cc-lives">❤️❤️❤️</div><div class="coco-stat-l">VIDAS</div></div>
+    </div>
+    <div class="coco-field" id="cocofield">
+      <div class="catcher" id="catcher" style="left:50%;bottom:14px">🧺</div>
+    </div>
+    <div class="coco-controls">
+      <div class="coco-btn" id="btn-left" onpointerdown="startMove(-1)" onpointerup="stopMove()" ontouchstart="startMove(-1);return false" ontouchend="stopMove()">◀</div>
+      <div class="coco-btn" id="btn-right" onpointerdown="startMove(1)" onpointerup="stopMove()" ontouchstart="startMove(1);return false" ontouchend="stopMove()">▶</div>
+    </div>`;
+  spawnCoco();
+  startMoveLoop();
+  startGameTimer(ch.time,()=>endCocos(ch));
+}
+
+let _moveDir=0,_moveLoop=null;
+function startMove(d){_moveDir=d}
+function stopMove(){_moveDir=0}
+function startMoveLoop(){
+  _moveLoop=setInterval(()=>{
+    if(!CC.running)return;
+    CC.pos=Math.max(5,Math.min(95,CC.pos+_moveDir*3.5));
+    const c=document.getElementById('catcher');
+    if(c)c.style.left=CC.pos+'%';
+  },30);
+}
+
+function spawnCoco(){
+  if(!CC.running)return;
+  const field=document.getElementById('cocofield');if(!field)return;
+  const isBad=Math.random()<0.3;
+  const items=isBad?['🪨','🔥','💀','🌪️']:['🥥','🍍','🍌','🍊','🥭'];
+  const el=document.createElement('div');
+  el.className='falling-item';el.textContent=items[Math.floor(Math.random()*items.length)];
+  const xPos=5+Math.random()*85;
+  el.style.left=xPos+'%';
+  const dur=Math.max(1.2,2.8-CC.score*0.025);
+  el.style.animationDuration=dur+'s';
+  el.dataset.bad=isBad?'1':'';
+  field.appendChild(el);
+  // collision
+  const check=setInterval(()=>{
+    if(!CC.running){clearInterval(check);el.remove();return;}
+    const er=el.getBoundingClientRect();const fr=field.getBoundingClientRect();
+    const relBottom=er.bottom-fr.top;
+    const catchZone=fr.height-60;
+    if(relBottom>=catchZone&&relBottom<catchZone+40){
+      const elCenter=(er.left+er.right)/2;const frLeft=fr.left;
+      const catchLeft=frLeft+fr.width*(CC.pos/100)-30;
+      const catchRight=catchLeft+60;
+      if(elCenter>=catchLeft&&elCenter<=catchRight){
+        clearInterval(check);el.remove();
+        if(isBad){CC.lives--;CC.score=Math.max(0,CC.score-5);flashColor('red');}
+        else{CC.score+=10;flashColor('green');}
+        updateCocoUI();
+        if(CC.lives<=0){CC.running=false;stopTimer();clearInterval(_moveLoop);endCocos();return;}
+      }
+    }
+  },40);
+  el.addEventListener('animationend',()=>{clearInterval(check);el.remove();if(!isBad&&CC.running){CC.lives--;updateCocoUI();}});
+  setTimeout(()=>CC.running&&spawnCoco(), Math.max(600,1200-CC.score*20));
+}
+
+function updateCocoUI(){
+  const sc=document.getElementById('cc-score');const lv=document.getElementById('cc-lives');
+  if(sc)sc.textContent=CC.score;
+  if(lv)lv.textContent='❤️'.repeat(Math.max(0,CC.lives))+'🖤'.repeat(Math.max(0,3-CC.lives));
+}
+
+function endCocos(ch){
+  CC.running=false;clearInterval(_moveLoop);
+  const stars=CC.score>=80?3:CC.score>=40?2:1;
+  finishGame(ch||CHAPTERS[1],stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 3: SAND CASTLE (sequence)
+// ══════════════════════════════════════════════
+const CASTLE_PIECES=['🪨','🌿','🪵','🪸','🏖️','💧','🍃','🌊'];
+let CAST_G={target:[],player:[],correct:0,rounds:0,running:false};
+
+function startCastelo(ch){
+  CAST_G={target:[],player:[],correct:0,rounds:0,running:true};
+  newCastleRound();
+  startGameTimer(ch.time,()=>endCastelo(ch));
+}
+
+function newCastleRound(){
+  CAST_G.rounds++;
+  const len=Math.min(2+CAST_G.correct,5);
+  CAST_G.target=[];CAST_G.player=[];
+  for(let i=0;i<len;i++) CAST_G.target.push(CASTLE_PIECES[Math.floor(Math.random()*CASTLE_PIECES.length)]);
+  renderCastelo();
+  // show target for 2s
+  const disp=document.getElementById('castle-display');
+  if(disp) disp.innerHTML=CAST_G.target.join(' ');
+  document.querySelectorAll('.castle-piece').forEach(b=>b.disabled=true);
+  setTimeout(()=>{
+    if(!CAST_G.running)return;
+    if(disp) disp.innerHTML='❓'.repeat(CAST_G.target.length).split('').join(' ');
+    document.querySelectorAll('.castle-piece').forEach(b=>b.disabled=false);
+    document.getElementById('castle-status').textContent='Sua vez! Reproduza!';
+  },1800);
+}
+
+function renderCastelo(){
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="castle-status" id="castle-status" style="color:#f5e6a3">Memorize a sequência! 👀</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.4);letter-spacing:2px;margin-bottom:8px">SEQUÊNCIA ${CAST_G.rounds} — ${CAST_G.correct} acertos</div>
+    <div class="castle-display" id="castle-display">${CAST_G.target.join(' ')}</div>
+    <div class="castle-btns">
+      ${CASTLE_PIECES.map((p,i)=>`<button class="castle-piece" onclick="castlePick('${p}')" disabled>${p}</button>`).join('')}
+    </div>`;
+}
+
+function castlePick(piece){
+  const pos=CAST_G.player.length;
+  if(pos>=CAST_G.target.length)return;
+  CAST_G.player.push(piece);
+  // Validate
+  if(piece!==CAST_G.target[pos]){
+    flashColor('red');
+    document.getElementById('castle-status').textContent='❌ Errou! Nova sequência...';
+    CAST_G.player=[];
+    setTimeout(()=>{ if(CAST_G.running) newCastleRound(); },1200);
+    return;
+  }
+  flashColor('green');
+  if(CAST_G.player.length===CAST_G.target.length){
+    CAST_G.correct++;
+    document.getElementById('castle-status').textContent=`✅ Perfeito! (${CAST_G.correct} acertos)`;
+    setTimeout(()=>{ if(CAST_G.running) newCastleRound(); },900);
+  }
+}
+
+function endCastelo(ch){
+  CAST_G.running=false;
+  const stars=CAST_G.correct>=6?3:CAST_G.correct>=3?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 4: TREASURE HUNT (memory grid)
+// ══════════════════════════════════════════════
+let TR={grid:[],revealed:[],firstPick:null,locked:false,found:0,misses:0,running:false};
+
+function startTesouro(ch){
+  TR={grid:[],revealed:[],firstPick:null,locked:false,found:0,misses:0,running:true};
+  const size=16;
+  const items=['💎','🗝️','🏆','👑','💰','🗺️','🔮','🪙'];
+  const paired=[...items,...items];
+  for(let i=paired.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[paired[i],paired[j]]=[paired[j],paired[i]];}
+  TR.grid=paired.map((v,i)=>({val:v,id:i,found:false}));
+  TR.revealed=new Array(size).fill(false);
+  renderTesouro();
+  // Peek for 2s
+  setTimeout(()=>{
+    TR.revealed=new Array(size).fill(false);
+    renderTesouro();
+  },2000);
+  startGameTimer(ch.time,()=>endTesouro(ch));
+}
+
+function renderTesouro(){
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="treasure-stats">
+      <div class="tres-stat"><div class="tres-stat-v" id="tr-found">${TR.found}</div><div class="tres-stat-l">PARES</div></div>
+      <div class="tres-stat"><div class="tres-stat-v" id="tr-miss">${TR.misses}</div><div class="tres-stat-l">ERROS</div></div>
+    </div>
+    <div class="treasure-grid" style="grid-template-columns:repeat(4,1fr);max-width:320px" id="tr-grid">
+      ${TR.grid.map((c,i)=>`
+        <div class="t-cell ${c.found?'revealed good':''}${TR.revealed[i]&&!c.found?' peek':''} ${c.found?'disabled':''}"
+          id="tc-${i}" onclick="trClick(${i})">
+          ${c.found||TR.revealed[i]?c.val:''}
+        </div>`).join('')}
+    </div>`;
+}
+
+function trClick(i){
+  if(TR.locked||TR.grid[i].found||TR.revealed[i])return;
+  TR.revealed[i]=true;
+  const el=document.getElementById(`tc-${i}`);
+  if(el){el.textContent=TR.grid[i].val;el.classList.add('peek');}
+  if(TR.firstPick===null){TR.firstPick=i;return;}
+  const a=TR.firstPick,b=i;TR.firstPick=null;
+  if(TR.grid[a].val===TR.grid[b].val){
+    TR.grid[a].found=true;TR.grid[b].found=true;TR.found++;
+    [a,b].forEach(x=>{const e=document.getElementById(`tc-${x}`);if(e){e.className='t-cell revealed good disabled';}});
+    document.getElementById('tr-found').textContent=TR.found;
+    flashColor('green');
+    if(TR.found>=8){stopTimer();endTesouro(CHAPTERS[G.chapter],true);}
+  } else {
+    TR.misses++;TR.locked=true;
+    [a,b].forEach(x=>{const e=document.getElementById(`tc-${x}`);if(e)e.classList.add('revealed','bad');});
+    document.getElementById('tr-miss').textContent=TR.misses;
+    flashColor('red');
+    setTimeout(()=>{
+      TR.revealed[a]=false;TR.revealed[b]=false;TR.locked=false;
+      [a,b].forEach(x=>{const e=document.getElementById(`tc-${x}`);if(e){e.classList.remove('revealed','bad','peek');e.textContent='';}});
+    },700);
+  }
+}
+
+function endTesouro(ch,perfect=false){
+  TR.running=false;
+  const stars=TR.found>=7?3:TR.found>=4?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 5: KAYAK RACE
+// ══════════════════════════════════════════════
+let KY={pos:5,rival:5,beats:0,running:false,rivalSpeed:0.25};
+
+function startKayak(ch){
+  KY={pos:5,rival:5,beats:0,running:true,rivalSpeed:0.22};
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="race-status" id="race-status" style="color:#44aaff">PREPARA... JÁ!</div>
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;width:100%;max-width:440px">
+      <div style="font-size:11px;color:#44ff88;width:24px">VCÊ</div>
+      <div class="kayak-progress"><div class="kayak-pfill" id="kp-fill" style="width:5%"></div></div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;width:100%;max-width:440px">
+      <div style="font-size:11px;color:#ff8888;width:24px">IA</div>
+      <div class="kayak-progress" style="background:rgba(255,255,255,.06)"><div class="kayak-rival-pfill" id="kr-fill" style="width:5%"></div></div>
+    </div>
+    <div class="kayak-lane">
+      <div class="kayak-waves"></div>
+      <div class="kayak-player" id="ky-player" style="left:5%">🚣‍♀️</div>
+      <div class="kayak-rival" id="ky-rival" style="left:5%">🚣‍♂️</div>
+      <div class="kayak-finish">🏁</div>
+    </div>
+    <button class="beat-btn" onclick="kayakBeat()" id="beat-btn">🌊 REMAR!</button>`;
+  startGameTimer(ch.time,()=>endKayak(ch));
+  // Rival auto-moves
+  const rivalInt=setInterval(()=>{
+    if(!KY.running){clearInterval(rivalInt);return;}
+    KY.rival=Math.min(95,KY.rival+KY.rivalSpeed);
+    KY.rivalSpeed+=0.003;
+    const rp=document.getElementById('ky-rival');const rf=document.getElementById('kr-fill');
+    if(rp)rp.style.left=KY.rival+'%';
+    if(rf)rf.style.width=KY.rival+'%';
+    const st=document.getElementById('race-status');
+    if(st) st.textContent=KY.pos>KY.rival?'🟢 NA FRENTE!':KY.pos<KY.rival?'🔴 ATRÁS! REMA!':'🟡 EMPATADAS!';
+    if(KY.rival>=95){clearInterval(rivalInt);if(KY.pos<90){KY.running=false;stopTimer();endKayak(CHAPTERS[G.chapter]);}}
+  },80);
+}
+
+function kayakBeat(){
+  if(!KY.running)return;
+  KY.beats++;KY.pos=Math.min(95,KY.pos+1.4);
+  const pp=document.getElementById('ky-player');const pf=document.getElementById('kp-fill');
+  if(pp)pp.style.left=KY.pos+'%';
+  if(pf)pf.style.width=KY.pos+'%';
+  if(KY.pos>=95){KY.running=false;stopTimer();endKayak(CHAPTERS[G.chapter],true);}
+}
+
+function endKayak(ch,won=false){
+  KY.running=false;
+  const stars=won?3:KY.pos>KY.rival?3:KY.pos>60?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 6: CAMPFIRE TRIVIA
+// ══════════════════════════════════════════════
+let TV={qIdx:0,correct:0,answered:false,qs:[]};
+
+function startTrivia(ch){
+  TV.qs=[...TRIVIA_QS].sort(()=>Math.random()-.5).slice(0,5);
+  TV={qIdx:0,correct:0,answered:false,qs:TV.qs};
+  renderTrivia();
+  startGameTimer(ch.time,()=>endTrivia(ch));
+}
+
+function renderTrivia(){
+  if(TV.qIdx>=TV.qs.length){stopTimer();endTrivia(CHAPTERS[G.chapter],true);return;}
+  const q=TV.qs[TV.qIdx];
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="trivia-fire">🔥</div>
+    <div class="trivia-score">Pergunta ${TV.qIdx+1}/${TV.qs.length} · ${TV.correct} acertos</div>
+    <div class="trivia-q">${q.q}</div>
+    <div class="trivia-opts">
+      ${q.opts.map((o,i)=>`<button class="trivia-opt" id="topt-${i}" onclick="triviaAnswer(${i})">${o}</button>`).join('')}
+    </div>`;
+}
+
+function triviaAnswer(i){
+  if(TV.answered)return;TV.answered=true;
+  const q=TV.qs[TV.qIdx];
+  document.querySelectorAll('.trivia-opt').forEach(b=>b.disabled=true);
+  document.getElementById(`topt-${i}`).classList.add(i===q.corr?'correct':'wrong');
+  if(i!==q.corr) document.getElementById(`topt-${q.corr}`).classList.add('correct');
+  if(i===q.corr){TV.correct++;flashColor('green');}
+  else{flashColor('red');}
+  setTimeout(()=>{TV.qIdx++;TV.answered=false;renderTrivia();},1200);
+}
+
+function endTrivia(ch,done=false){
+  const stars=TV.correct>=4?3:TV.correct>=2?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 7: STORM MAZE (labirinto)
+// ══════════════════════════════════════════════
+const MAZE_SIZE=6;
+let MZ={grid:[],player:{r:0,c:0},goal:{r:5,c:5},moves:0,maxMoves:22,running:false};
+
+function startLabirinto(ch){
+  MZ={grid:buildMaze(),player:{r:0,c:0},goal:{r:MAZE_SIZE-1,c:MAZE_SIZE-1},moves:0,maxMoves:24,running:true};
+  renderMaze();
+  startGameTimer(ch.time,()=>endLabirinto(ch));
+}
+
+function buildMaze(){
+  const g=[];
+  for(let r=0;r<MAZE_SIZE;r++){g.push([]);
+    for(let c=0;c<MAZE_SIZE;c++){
+      const isDanger=Math.random()<0.18&&!(r===0&&c===0)&&!(r===MAZE_SIZE-1&&c===MAZE_SIZE-1);
+      g[r].push({wall:false,danger:isDanger,visited:false});
+    }
+  }
+  return g;
+}
+
+function renderMaze(){
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="storm-moves" id="mz-moves">Movimentos: ${MZ.moves}/${MZ.maxMoves}</div>
+    <div class="storm-grid" style="grid-template-columns:repeat(${MAZE_SIZE},1fr);max-width:${MAZE_SIZE*54}px" id="mz-grid">
+      ${MZ.grid.flatMap((row,r)=>row.map((cell,c)=>{
+        const isPlayer=MZ.player.r===r&&MZ.player.c===c;
+        const isGoal=MZ.goal.r===r&&MZ.goal.c===c;
+        const cls=isPlayer?'player':isGoal?'goal':cell.visited?'visited':cell.danger?'danger':'';
+        const icon=isPlayer?'🧭':isGoal?'🚁':cell.danger&&isPlayer?'💀':cell.danger?'⚡':'';
+        return `<div class="storm-cell ${cls}">${icon}</div>`;
+      })).join('')}
+    </div>
+    <div class="storm-dpad">
+      <div class="dpad-empty"></div>
+      <div class="dpad-btn" onclick="mazeMove(-1,0)">⬆️</div>
+      <div class="dpad-empty"></div>
+      <div class="dpad-btn" onclick="mazeMove(0,-1)">⬅️</div>
+      <div class="dpad-btn" onclick="mazeMove(0,0)">🧭</div>
+      <div class="dpad-btn" onclick="mazeMove(0,1)">➡️</div>
+      <div class="dpad-empty"></div>
+      <div class="dpad-btn" onclick="mazeMove(1,0)">⬇️</div>
+      <div class="dpad-empty"></div>
+    </div>`;
+}
+
+function mazeMove(dr,dc){
+  if(!MZ.running)return;
+  const nr=MZ.player.r+dr,nc=MZ.player.c+dc;
+  if(nr<0||nr>=MAZE_SIZE||nc<0||nc>=MAZE_SIZE)return;
+  MZ.grid[MZ.player.r][MZ.player.c].visited=true;
+  MZ.player={r:nr,c:nc};MZ.moves++;
+  if(MZ.grid[nr][nc].danger){
+    flashColor('red');MZ.player={r:0,c:0};MZ.moves+=3;
+  }
+  document.getElementById('mz-moves').textContent=`Movimentos: ${MZ.moves}/${MZ.maxMoves}`;
+  if(MZ.player.r===MZ.goal.r&&MZ.player.c===MZ.goal.c){MZ.running=false;stopTimer();endLabirinto(CHAPTERS[G.chapter],true);}
+  else if(MZ.moves>=MZ.maxMoves){MZ.running=false;stopTimer();endLabirinto(CHAPTERS[G.chapter]);}
+  else renderMaze();
+}
+
+function endLabirinto(ch,won=false){
+  MZ.running=false;
+  const stars=won&&MZ.moves<14?3:won?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 8: SUNSET PHOTOGRAPHY
+// ══════════════════════════════════════════════
+let PH={shots:0,perfect:0,sunPos:10,running:false,sliderVal:50};
+
+function startFotos(ch){
+  PH={shots:0,perfect:0,sunPos:10,running:true,sliderVal:50};
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div style="font-size:13px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-bottom:8px;text-align:center">FOTOGRAFE O PÔR DO SOL PERFEITO!</div>
+    <div class="photo-scene" id="photo-scene">
+      <div class="photo-sun" id="ph-sun" style="left:10%">🌅</div>
+      <div class="photo-bird" style="animation-duration:4s">🐦</div>
+      <div class="photo-bird" style="animation-duration:6s;animation-delay:-2s;top:70px">🦅</div>
+      <div class="viewfinder" id="viewfinder"></div>
+    </div>
+    <div class="photo-slider-wrap">
+      <input type="range" class="photo-slider" id="ph-slider" min="0" max="100" value="50" oninput="updateSlider(this.value)">
+    </div>
+    <div class="photo-results" id="ph-results"></div>
+    <div style="display:flex;gap:12px;justify-content:center;font-family:'Lilita One',cursive;font-size:13px;color:rgba(255,255,255,.4);margin-bottom:8px">
+      <span id="ph-shots">📸 0/${Math.min(5,Math.floor(ch.time/6))}</span>
+      <span id="ph-perfs">⭐ ${PH.perfect} perfeitas</span>
+    </div>
+    <button class="shutter-btn" onclick="takePhoto(${ch.time})">📸 FOTOGRAFAR!</button>`;
+  // Sun moves
+  const sunMove=setInterval(()=>{
+    if(!PH.running){clearInterval(sunMove);return;}
+    PH.sunPos=(PH.sunPos+0.4)%100;
+    const s=document.getElementById('ph-sun');if(s)s.style.left=PH.sunPos+'%';
+    const vf=document.getElementById('viewfinder');
+    if(vf){const diff=Math.abs(PH.sliderVal-PH.sunPos);
+      vf.className='viewfinder'+(diff<8?' aim':diff<3?' perfect':'');}
+  },60);
+  PH._sunMove=sunMove;
+  startGameTimer(ch.time,()=>{PH.running=false;clearInterval(sunMove);endFotos(ch);});
+}
+
+function updateSlider(v){PH.sliderVal=parseFloat(v);}
+
+function takePhoto(maxShots){
+  if(!PH.running)return;
+  PH.shots++;
+  const diff=Math.abs(PH.sliderVal-PH.sunPos);
+  const isPerfect=diff<4;const isGood=diff<10;
+  const icon=isPerfect?'🌟':isGood?'📸':'💨';
+  if(isPerfect){PH.perfect++;flashColor('green');}else if(!isGood)flashColor('red');
+  const res=document.getElementById('ph-results');
+  if(res){const s=document.createElement('div');s.className='photo-shot';s.textContent=icon;res.appendChild(s);}
+  const pf=document.getElementById('ph-perfs');const ps=document.getElementById('ph-shots');
+  if(pf)pf.textContent=`⭐ ${PH.perfect} perfeitas`;
+  if(ps)ps.textContent=`📸 ${PH.shots} fotos`;
+}
+
+function endFotos(ch){
+  PH.running=false;clearInterval(PH._sunMove);
+  const stars=PH.perfect>=4?3:PH.perfect>=2?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  GAME 9: GOODBYE FIREWORKS (simon-sequence)
+// ══════════════════════════════════════════════
+const FW_ITEMS=['🔴','🟡','🟢','🔵'];
+let FW={seq:[],player:[],level:1,showing:false,active:false,correct:0};
+
+function startFogos(ch){
+  FW={seq:[Math.floor(Math.random()*4)],player:[],level:1,showing:false,active:false,correct:0};
+  const body=document.getElementById('game-body');
+  body.innerHTML=`
+    <div class="fw-status" id="fw-status" style="font-family:'Lilita One',cursive;font-size:clamp(14px,3.5vw,20px);text-align:center;color:#ffcc00;margin-bottom:8px">Observe a sequência! 🎆</div>
+    <div class="fw-seq-display" id="fw-seq">
+      ${FW.seq.map(i=>`<span class="fw-seq-icon">${FW_ITEMS[i]}</span>`).join('')}
+    </div>
+    <div class="fireworks-sky" id="fw-sky"></div>
+    <div class="fw-btns">
+      ${FW_ITEMS.map((item,i)=>`<button class="fw-btn" onclick="fwPress(${i})">${item}</button>`).join('')}
+    </div>`;
+  setTimeout(()=>showFwSeq(),500);
+  startGameTimer(ch.time,()=>endFogos(ch));
+}
+
+function showFwSeq(){
+  FW.showing=true;FW.player=[];FW.active=false;
+  document.getElementById('fw-status').textContent=`Nível ${FW.level} — ${FW.seq.length} fogos! 🎆`;
+  // Update seq display
+  const sd=document.getElementById('fw-seq');
+  if(sd)sd.innerHTML=FW.seq.map(i=>`<span class="fw-seq-icon">${FW_ITEMS[i]}</span>`).join('');
+  let i=0;
+  const intv=setInterval(()=>{
+    if(i<FW.seq.length){
+      // light up
+      const icons=document.querySelectorAll('.fw-seq-icon');
+      icons.forEach(ic=>ic.classList.remove('lit'));
+      if(icons[i])icons[i].classList.add('lit');
+      // firework burst
+      spawnFwBurst(FW_ITEMS[FW.seq[i]]);
+      i++;
+    } else {
+      clearInterval(intv);
+      document.querySelectorAll('.fw-seq-icon').forEach(ic=>ic.classList.remove('lit'));
+      FW.showing=false;FW.active=true;
+      document.getElementById('fw-status').textContent='Repita a sequência! 🚀';
+    }
+  },700);
+}
+
+function spawnFwBurst(emoji){
+  const sky=document.getElementById('fw-sky');if(!sky)return;
+  const b=document.createElement('div');
+  b.className='fw-burst';b.textContent=emoji;
+  b.style.left=(20+Math.random()*60)+'%';
+  b.style.top=(15+Math.random()*60)+'%';
+  sky.appendChild(b);
+  setTimeout(()=>b.remove(),500);
+}
+
+function fwPress(idx){
+  if(!FW.active)return;
+  spawnFwBurst(FW_ITEMS[idx]);
+  FW.player.push(idx);
+  const pos=FW.player.length-1;
+  if(FW.player[pos]!==FW.seq[pos]){
+    flashColor('red');
+    document.getElementById('fw-status').textContent='❌ Errou! Recomeçando nível...';
+    FW.active=false;
+    setTimeout(()=>{ if(document.getElementById('fw-status')) showFwSeq(); },1000);
+    return;
+  }
+  if(FW.player.length===FW.seq.length){
+    FW.correct++;FW.level++;
+    document.getElementById('fw-status').textContent=`✅ Perfeito! Nível ${FW.level}! 🎆`;
+    FW.active=false;
+    if(FW.level>6){stopTimer();endFogos(CHAPTERS[G.chapter],true);return;}
+    FW.seq.push(Math.floor(Math.random()*4));
+    const sd=document.getElementById('fw-seq');
+    if(sd)sd.innerHTML=FW.seq.map(i=>`<span class="fw-seq-icon">${FW_ITEMS[i]}</span>`).join('');
+    setTimeout(()=>showFwSeq(),1000);
+  }
+}
+
+function endFogos(ch,perfect=false){
+  const stars=perfect||FW.correct>=5?3:FW.correct>=3?2:1;
+  finishGame(ch,stars);
+}
+
+// ══════════════════════════════════════════════
+//  FINISH GAME / RESULT
+// ══════════════════════════════════════════════
+function finishGame(ch, stars){
+  stopTimer();G.active=false;
+  const res=ch.result;
+  const resKey=stars===3?'stars3':stars===2?'stars2':'stars1';
+  const resData=res[resKey];
+  G.stars[G.chapter]=stars;
+  G.totalStars+=stars;
+  // Chaos impact
+  if(stars===3)G.chaos=Math.max(0,G.chaos-8);
+  else if(stars===1)G.chaos=Math.min(100,G.chaos+12);
+  // Emoji
+  const emoji=stars===3?'🌟':stars===2?'✅':'😬';
+  const titleStr=stars===3?'INCRÍVEL!':stars===2?'BEM FEITO!':'FOI POR POUCO...';
+  document.getElementById('rc-emoji').textContent=emoji;
+  document.getElementById('rc-title').textContent=titleStr;
+  document.getElementById('rc-title').style.color=stars===3?'#ffcc00':stars===2?'#44ff88':'#ff8800';
+  document.getElementById('rc-stars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('rc-story').innerHTML=resData.story;
+  document.getElementById('rc-quote').textContent=resData.quote;
+  document.getElementById('rc-btn').textContent=G.chapter>=8?'VER FINAL! 🏝️':'PRÓXIMA MISSÃO →';
+  document.getElementById('result-card').classList.add('show');
+}
+
+function continueFromResult(){
+  document.getElementById('result-card').classList.remove('show');
+  if(G.chapter>=8){ showEnding(); return; }
+  G.chapter++;
+  buildMap();
+  showScreen('s-map');
+  setTimeout(()=>openStoryPanel(G.chapter),500);
+}
+
+// ══════════════════════════════════════════════
+//  ENDINGS
+// ══════════════════════════════════════════════
+function showEnding(){
+  const totalStars=G.stars.reduce((a,b)=>a+(b||0),0);
+  const chaos=G.chaos;
+  if(totalStars>=18||chaos<40){showGoodEnding(totalStars);}
+  else{showBadEnding();}
+}
+
+function showGoodEnding(total){
+  document.getElementById('end-story-good').innerHTML=`
+    <p>O helicóptero pousou na praia às 18h47 de uma sexta-feira. O pôr do sol estava perfeito — irônico, para uma ilha que tinha tentado acabar com elas.</p>
+    <p><strong>Pollyana</strong> foi a última a embarcar. Ficou olhando pra trás por um segundo.</p>
+    <p>"Eu não mudaría nada," ela disse. Carluz quase a jogou de volta na ilha.</p>
+    <p>Na semana seguinte, o grupo descobriu que o "resort" era uma conta falsa do Instagram. A Pollyana já tinha 4 ideias pra <strong>próxima viagem.</strong> 🌻</p>`;
+  const charsEl=document.getElementById('end-chars-good');
+  charsEl.innerHTML=Object.entries(CAST).map(([name,c],i)=>`
+    <div class="end-char-card" style="border-color:${c.color}44">
+      <span class="end-char-emoji">${c.emoji}</span>
+      <div class="end-char-name" style="color:${c.color}">${name.toUpperCase()}</div>
+      <div class="end-char-stars">⭐${'⭐'.repeat(G.stars[i]||0)}</div>
+    </div>`).join('');
+  const rank=total>=24?'🏆 LENDÁRIAS':total>=18?'🥇 HERÓINAS':total>=12?'🥈 SOBREVIVENTES':'🥉 TIVEMOS SORTE';
+  document.getElementById('end-total-good').textContent=`${rank} · ${total} estrelas de 27`;
+  showScreen('s-end-good');
+}
+
+function showBadEnding(){
+  document.getElementById('end-story-bad').innerHTML=`
+    <p>O helicóptero passou voando sem ver o sinal. O caos tinha chegado ao pico — ninguém conseguia coordenar nada.</p>
+    <p>A Pollyana olhou pras amigas. As amigas olharam pra Pollyana. O silêncio era eloquente.</p>
+    <p><strong>"Tá bom,"</strong> disse a Pollyana. <strong>"Vou organizar um sinal de fumaça."</strong></p>
+    <p>Elas passaram mais 3 dias na ilha. Mas curiosamente... foi a melhor parte da viagem. 🌴</p>`;
+  showScreen('s-end-bad');
+}
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function flashColor(type){
+  const el=document.createElement('div');
+  el.className=`flash-overlay flash-${type}`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),350);
+}
+
+// ══════════════════════════════════════════════
+//  KEYBOARD SUPPORT
+// ══════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft')startMove(-1);
+  if(e.key==='ArrowRight')startMove(1);
+  if(e.key===' '){e.preventDefault();kayakBeat();jump&&jump();}
+  if(e.key==='ArrowUp')mazeMove(-1,0);
+  if(e.key==='ArrowDown')mazeMove(1,0);
+});
+document.addEventListener('keyup',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight')stopMove();
+});
+
+// ══ INIT ══
+initIntro();
+</script>
+</body>
+</html>
